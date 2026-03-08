@@ -69,16 +69,23 @@ app.use((err, _req, res, _next) => {
     res.status(500).json({ success: false, message: "Internal server error" });
 });
 
-// ──── Start ────
-async function start() {
-    await connectDB();
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-        console.log(`API: http://localhost:${PORT}/api/health`);
-    });
-}
+// ──── Start & Export ────
+const start = async () => {
+    try {
+        await connectDB();
+        // Only listen locally, Vercel just needs the exported app
+        if (process.env.NODE_ENV !== "production") {
+            app.listen(PORT, () => {
+                console.log(`Server running on port ${PORT}`);
+                console.log(`API: http://localhost:${PORT}/api/health`);
+            });
+        }
+    } catch (err) {
+        console.error("Failed to start server:", err);
+        process.exit(1);
+    }
+};
 
-start().catch((err) => {
-    console.error("Failed to start server:", err);
-    process.exit(1);
-});
+start();
+
+export default app;
