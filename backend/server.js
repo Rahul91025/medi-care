@@ -44,6 +44,17 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // ──── Static files (uploaded images) ────
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// ──── DB connection middleware (connects once, caches for serverless) ────
+app.use(async (_req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error("DB connection failed:", err);
+        res.status(500).json({ success: false, message: "Database connection failed" });
+    }
+});
+
 // ──── Clerk Auth Middleware (populates req.auth) ────
 app.use(clerkAuth);
 
@@ -69,23 +80,17 @@ app.use((err, _req, res, _next) => {
     res.status(500).json({ success: false, message: "Internal server error" });
 });
 
-// ──── Start & Export ────
-const start = async () => {
-    try {
-        await connectDB();
-        // Only listen locally, Vercel just needs the exported app
-        if (process.env.NODE_ENV !== "production") {
-            app.listen(PORT, () => {
-                console.log(`Server running on port ${PORT}`);
-                console.log(`API: http://localhost:${PORT}/api/health`);
-            });
-        }
-    } catch (err) {
+// ──── Local dev: start listening ────
+if (process.env.NODE_ENV !== "production") {
+    connectDB().then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+            console.log(`API: http://localhost:${PORT}/api/health`);
+        });
+    }).catch((err) => {
         console.error("Failed to start server:", err);
         process.exit(1);
-    }
-};
-
-start();
+    });
+}
 
 export default app;
