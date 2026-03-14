@@ -12,7 +12,7 @@ import { useAuth } from "@clerk/react";
 import toast, { Toaster } from "react-hot-toast";
 import { serviceDetailStyles, iconSize } from "../../assets/dummyStyles";
 
-const DEFAULT_HOST = "http://localhost:4000".replace(/\/$/, "");
+const DEFAULT_HOST = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
 
 export default function ServiceDetail() {
   const { id } = useParams();
@@ -131,34 +131,6 @@ export default function ServiceDetail() {
         "All endpoints failed, falling back to local servicesData. Last error:",
         lastError,
       );
-      const local =
-        servicesData && servicesData.find((s) => String(s.id) === String(id));
-      if (local) {
-        const cloned = JSON.parse(JSON.stringify(local));
-        if (
-          !cloned.slots ||
-          (Array.isArray(cloned.slots) &&
-            cloned.dates &&
-            cloned.dates.length > 0)
-        ) {
-          const arrSlots = Array.isArray(cloned.slots) ? cloned.slots : [];
-          const slotsMap = {};
-          if (cloned.dates && cloned.dates.length > 0) {
-            cloned.dates.forEach((d) => (slotsMap[d] = arrSlots.slice()));
-          } else {
-            const today = new Date().toISOString().split("T")[0];
-            slotsMap[today] = arrSlots.slice();
-            cloned.dates = [today];
-          }
-          cloned.slots = slotsMap;
-        }
-        setService(cloned);
-        if (cloned.dates && cloned.dates.length > 0)
-          setSelectedDate(cloned.dates[0]);
-        setLoading(false);
-        return;
-      }
-
       setFetchError("Unable to fetch service details from server.");
       setLoading(false);
     }

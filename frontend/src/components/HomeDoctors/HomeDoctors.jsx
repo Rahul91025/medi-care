@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Award, Clock } from "lucide-react";
 import { cn } from "../../utils";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE || "";
 
 export default function HomeDoctors({ previewCount = 6 }) {
   const [doctors, setDoctors] = useState([]);

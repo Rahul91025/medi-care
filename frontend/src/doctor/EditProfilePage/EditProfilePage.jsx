@@ -57,7 +57,7 @@ function dedupeAndSortSchedule(schedule = {}) {
 export default function EditProfilePage({ apiBase }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const API_BASE = "http://localhost:4000/api/doctors";
+  const API_BASE = `${import.meta.env.VITE_API_BASE || "http://localhost:4000"}/api/doctors`;
 
   const [doc, setDoc] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -266,68 +266,68 @@ export default function EditProfilePage({ apiBase }) {
 
   const fieldConfigs = doc
     ? [
-        {
-          icon: User,
-          label: "Name",
-          value: doc.name || "",
-          onChange: (v) => setDoc((d) => ({ ...d, name: v })),
-        },
-        {
-          icon: Briefcase,
-          label: "Specialization",
-          value: doc.specialization || "",
-          onChange: (v) => setDoc((d) => ({ ...d, specialization: v })),
-        },
-        {
-          icon: Clock,
-          label: "Experience",
-          value: doc.experience || "",
-          onChange: (v) => setDoc((d) => ({ ...d, experience: v })),
-        },
-        {
-          icon: GraduationCap,
-          label: "Qualifications",
-          value: doc.qualifications || "",
-          onChange: (v) => setDoc((d) => ({ ...d, qualifications: v })),
-        },
-        {
-          icon: MapPin,
-          label: "Location",
-          value: doc.location || "",
-          onChange: (v) => setDoc((d) => ({ ...d, location: v })),
-        },
-        {
-          icon: User,
-          label: "Patients",
-          value: doc.patients ?? "",
-          onChange: (v) =>
-            setDoc((d) => ({ ...d, patients: v === "" ? "" : Number(v) || 0 })),
-        },
-        {
-          icon: CheckCircle,
-          label: "Success",
-          value: doc.success ?? "",
-          onChange: (v) =>
-            setDoc((d) => ({ ...d, success: v === "" ? "" : Number(v) || 0 })),
-        },
-        {
-          icon: Star,
-          label: "Rating (out of 5)",
-          value: doc.rating ?? "",
-          onChange: (v) =>
-            setDoc((d) => ({
-              ...d,
-              rating: v === "" ? "" : parseFloat(v) || 0,
-            })),
-        },
-        {
-          icon: DollarSign,
-          label: "Fee (INR)",
-          value: doc.fee ?? "",
-          onChange: (v) =>
-            setDoc((d) => ({ ...d, fee: v === "" ? "" : Number(v) || 0 })),
-        },
-      ]
+      {
+        icon: User,
+        label: "Name",
+        value: doc.name || "",
+        onChange: (v) => setDoc((d) => ({ ...d, name: v })),
+      },
+      {
+        icon: Briefcase,
+        label: "Specialization",
+        value: doc.specialization || "",
+        onChange: (v) => setDoc((d) => ({ ...d, specialization: v })),
+      },
+      {
+        icon: Clock,
+        label: "Experience",
+        value: doc.experience || "",
+        onChange: (v) => setDoc((d) => ({ ...d, experience: v })),
+      },
+      {
+        icon: GraduationCap,
+        label: "Qualifications",
+        value: doc.qualifications || "",
+        onChange: (v) => setDoc((d) => ({ ...d, qualifications: v })),
+      },
+      {
+        icon: MapPin,
+        label: "Location",
+        value: doc.location || "",
+        onChange: (v) => setDoc((d) => ({ ...d, location: v })),
+      },
+      {
+        icon: User,
+        label: "Patients",
+        value: doc.patients ?? "",
+        onChange: (v) =>
+          setDoc((d) => ({ ...d, patients: v === "" ? "" : Number(v) || 0 })),
+      },
+      {
+        icon: CheckCircle,
+        label: "Success",
+        value: doc.success ?? "",
+        onChange: (v) =>
+          setDoc((d) => ({ ...d, success: v === "" ? "" : Number(v) || 0 })),
+      },
+      {
+        icon: Star,
+        label: "Rating (out of 5)",
+        value: doc.rating ?? "",
+        onChange: (v) =>
+          setDoc((d) => ({
+            ...d,
+            rating: v === "" ? "" : parseFloat(v) || 0,
+          })),
+      },
+      {
+        icon: DollarSign,
+        label: "Fee (INR)",
+        value: doc.fee ?? "",
+        onChange: (v) =>
+          setDoc((d) => ({ ...d, fee: v === "" ? "" : Number(v) || 0 })),
+      },
+    ]
     : [];
 
   if (loading) {
@@ -358,13 +358,12 @@ export default function EditProfilePage({ apiBase }) {
           {toasts.map((t) => (
             <div
               key={t.id}
-              className={`${styles.toastBase} ${
-                t.type === "error"
+              className={`${styles.toastBase} ${t.type === "error"
                   ? styles.toastError
                   : t.type === "info"
                     ? styles.toastInfo
                     : styles.toastSuccess
-              }`}
+                }`}
             >
               {t.type === "error" ? (
                 <AlertCircle

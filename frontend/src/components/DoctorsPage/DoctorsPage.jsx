@@ -9,7 +9,7 @@ import d3 from '../../assets/D3.png';
 
 const fallbackImages = [d1, d2, d3];
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE || "";
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState([]);
